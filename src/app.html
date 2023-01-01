@@ -1,0 +1,28 @@
+<span id="email"></span>
+<br/>
+<button id="logout">logout</button>
+
+<script type="module">
+  import { createClient } from "https://esm.sh/@supabase/supabase-js@2.2.3";
+
+  if(localStorage.getItem("access_token") !== null) {
+    const supabase_url = "https://mjiiwbismlguvyssfxey.supabase.co", supabase_key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1qaWl3YmlzbWxndXZ5c3NmeGV5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2NzE5MjM4MjUsImV4cCI6MTk4NzQ5OTgyNX0.TtVV_ZM0rUJu6QvBv_PbjP22gS0gGv4ee6eMGdXllyE", supabase = createClient(supabase_url, supabase_key);
+
+    const user = await supabase.auth.getUser(localStorage.getItem("access_token")), email = user.data.user.email;
+
+    const email_span = document.getElementById("email");
+    email_span.innerText = email;
+
+    document.getElementById("logout").onclick = (e) => {
+      e.preventDefault();
+      supabase.auth.signOut()
+        .then(() => {
+          localStorage.removeItem("access_token");
+          localStorage.removeItem("refresh_token");
+          window.location.replace("/");
+        })
+    }
+  } else {
+    window.location.replace("/");
+  }
+</script>

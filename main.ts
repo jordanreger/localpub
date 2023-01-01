@@ -58,6 +58,10 @@ async function handler(req: Request): Promise<Response> {
   else if(path === "/app") {
     return new Response(await file("./src/app.html"), { headers: { "content-type": "text/html; charset=utf-8" } });
   }
+
+  else if(path === "/index.css") {
+    return new Response(await file("./src/index.css"), { headers: { "content-type": "text/css" } });
+  }
   
   else {
     return new Response("404", { headers: { "content-type": "text/plain" } });

@@ -1,0 +1,22 @@
+image: ubuntu/20.04
+packages:
+    - unzip
+sources:
+    - https://git.sr.ht/~jordanreger/localpub
+secrets:
+    - 40905730-8922-46ad-8f53-dc416722a53f # deploy key
+tasks:
+    - install-deno: |
+        curl -fsSL https://deno.land/x/install/install.sh | sh
+    - install-deployctl: |
+        DENO_INSTALL="/home/build/.deno"
+        PATH="$DENO_INSTALL/bin:$PATH"
+        deno install --allow-read --allow-write --allow-env --allow-net --allow-run --no-check -r -f https://deno.land/x/deploy/deployctl.ts
+    - deploy-posse: |
+        cd localpub
+        set +x
+        DEPLOY_TOKEN=$(cat ~/.deploy_key)
+        set -x
+        DENO_INSTALL="/home/build/.deno"
+        PATH="$DENO_INSTALL/bin:$PATH"
+        deployctl deploy --project=localpub ./main.ts --token=$DEPLOY_TOKEN --prod

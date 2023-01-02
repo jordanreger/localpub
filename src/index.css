@@ -6,6 +6,9 @@
 }
 
 body {
+    max-width: 650px;
+    margin: 40px auto;
+    padding: 0 10px;
     font-family: "Inter", sans-serif, "Noto Emoji";
     color: #212121;
     background-color: #e0e0e0;
@@ -57,16 +60,20 @@ img {
     max-width: 100%;
 }
 
+button:hover {
+    cursor: pointer;
+}
+
 @media (prefers-color-scheme: dark) {
     body {
         color: #e0e0e0;
         background: #212121;
     }
-    a:link {
-        color: #ffe551;
+    a:link{
+        color:#ffe551;
     }
-    a:visited {
-        color: #ffe551;
+    a:visited{
+        color:#ffe551;
     }
     input, textarea, button {
         color: #e0e0e0;

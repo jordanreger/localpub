@@ -51,12 +51,12 @@ async function handler(req: Request): Promise<Response> {
     }
   }
 
-  else if(path === "/auth") {
-    return new Response("auth", { headers: { "content-type": "text/plain" }});
-  }
-
   else if(path === "/app") {
     return new Response(await file("./src/app.html"), { headers: { "content-type": "text/html; charset=utf-8" } });
+  }
+
+  else if(path === "/settings") {
+    return new Response(await file("./src/settings.html"), { headers: { "content-type": "text/html; charset=utf-8" } });
   }
 
   else if(path === "/index.css") {

@@ -10,8 +10,9 @@
     <li><a href="/settings">settings</a></li>
   </ul>
 </nav>
-<h1>localpub</h1>
-<span id="username"></span>
+
+<h1>settings</h1>
+<button id="logout">logout</button>
 
 <script type="module">
   import { createClient } from "https://esm.sh/@supabase/supabase-js@2.2.3";
@@ -27,6 +28,15 @@
   
     const username_span = document.getElementById("username");
     username_span.innerText = username;
+
+    document.getElementById("logout").onclick = (e) => {
+      e.preventDefault();
+      supabase.auth.signOut()
+        .then(() => {
+          localStorage.clear();
+          window.location.replace("/");
+        })
+    }
   } else {
     window.location.replace("/");
   }

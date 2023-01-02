@@ -5,3 +5,11 @@
 
 <h1>localpub</h1>
 <a href="/register">register</a> or <a href="/login">login</a>
+
+<script>
+  window.onload = () => {
+    if(localStorage.getItem("user_id") !== null) {
+      window.location.replace("/app");
+    }
+  }
+</script>

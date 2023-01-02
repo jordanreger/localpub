@@ -17,17 +17,18 @@
 <script type="module">
   import { createClient } from "https://esm.sh/@supabase/supabase-js@2.2.3";
   const supabase_url = "https://yxdttigyfqrrkkvehxdg.supabase.co", supabase_key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl4ZHR0aWd5ZnFycmtrdmVoeGRnIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NzI2MjE3NjMsImV4cCI6MTk4ODE5Nzc2M30.czHsxEi3EItV0JNMsVtgClc3SOOFVGGQldAqh3Xtuhc", supabase = createClient(supabase_url, supabase_key);
+  
+  const { data, error } = await supabase.auth.getSession();
 
-  if(localStorage.getItem("user_id") !== null) {
+  if(data.session === null) {
+    window.location.replace("/");
+  } else {
     document.getElementById("logout").onclick = (e) => {
       e.preventDefault();
       supabase.auth.signOut()
         .then(() => {
-          localStorage.clear();
           window.location.replace("/");
         })
     }
-  } else {
-    window.location.replace("/");
   }
 </script>

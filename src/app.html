@@ -11,24 +11,46 @@
   </ul>
 </nav>
 
-<h1>localpub</h1>
-<span id="username"></span>
+<h1 id="username"></h1>
+<form id="username-form" style="display: none">
+  <label for="username-input">please enter a username.</label>
+  <br/>
+  <br/>
+  <input type="text" placeholder="username" id="username-input" minlength="2" />
+  <input type="submit" value="submit" />
+</form>
+
+<div>test</div>
 
 <script type="module">
   import { createClient } from "https://esm.sh/@supabase/supabase-js@2.2.3";
   const supabase_url = "https://yxdttigyfqrrkkvehxdg.supabase.co", supabase_key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl4ZHR0aWd5ZnFycmtrdmVoeGRnIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NzI2MjE3NjMsImV4cCI6MTk4ODE5Nzc2M30.czHsxEi3EItV0JNMsVtgClc3SOOFVGGQldAqh3Xtuhc", supabase = createClient(supabase_url, supabase_key);
-
-  if(localStorage.getItem("user_id") !== null) {
-    let username;
-    if(localStorage.getItem("username") !== "undefined" || localStorage.getItem("username") === null) {
-      username = localStorage.getItem("username");
-    } else {
-      username = localStorage.getItem("email");
-    }
   
-    const username_span = document.getElementById("username");
-    username_span.innerText = username;
-  } else {
+  const { data, error } = await supabase.auth.getSession();
+
+  if(data.session === null) {
     window.location.replace("/");
+  }
+
+  // set username
+  const user = await supabase.auth.getUser();
+  const username = user.data.user.user_metadata.username;
+  if(username === undefined) {
+    document.getElementById("username").style.display = "none";
+    document.getElementById("username-form").style.display = "block";
+  }
+
+  document.getElementById("username").innerText = `~${username}`;
+
+  const form = document.getElementById("username-form");
+  form.onsubmit = async (e) => {
+    e.preventDefault();
+    const username = e.target.children[3].value;
+
+    const { data, error } = await supabase.auth.updateUser({
+      data: { username: username }
+    })
+
+    window.location.reload();
   }
 </script>

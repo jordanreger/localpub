@@ -30,7 +30,6 @@ td {
 }
 
 input, textarea, button {
-    -webkit-appearance: none;
     padding: 5px 8px;
     font-size: 16px;
     font: inherit;

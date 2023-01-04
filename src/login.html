@@ -33,7 +33,7 @@
     const { data, error } = await supabase.auth.signInWithOtp({
       email: email,
       options: {
-        emailRedirectTo: 'http://localhost:8000/app'
+        emailRedirectTo: 'https://localpub.deno.dev/app'
       }
     })
 

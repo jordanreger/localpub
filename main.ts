@@ -8,6 +8,7 @@ async function handler(req: Request): Promise<Response> {
   const url = new URL(req.url);
   const path = url.pathname;
   const file = (fp:string) => { return Deno.readFile(fp) };
+  const route = (route:string) => { const regexRoute = new RegExp(route, "gmi"); if(regexRoute.test(path)){ return path } else { return null }}
 
   if(path === "/") {
     return new Response(await file("./src/index.html"), { headers: { "content-type": "text/html; charset=utf-8" } });
@@ -21,36 +22,6 @@ async function handler(req: Request): Promise<Response> {
     return new Response(await file("./src/login.html"), { headers: { "content-type": "text/html; charset=utf-8" } });
   }
 
-  else if(path === "/register-auth") {
-    const req_body = await req.json(), email = req_body.email, password = req_body.password;
-
-    const { data, error } = await supabase.auth.signUp({
-      email: email,
-      password: password
-    })
-
-    if(!error) {
-      return new Response(JSON.stringify(data), { headers: { "content-type": "text/plain" }});
-    } else {
-      return new Response(JSON.stringify(error), { headers: { "content-type": "text/plain" }});
-    }
-  }
-
-  else if(path === "/login-auth") {
-    const req_body = await req.json(), email = req_body.email, password = req_body.password;
-
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: email,
-      password: password
-    });
-
-    if(!error) {
-      return new Response(JSON.stringify(data), { headers: { "content-type": "text/plain" }});
-    } else {
-      return new Response(JSON.stringify(error), { headers: { "content-type": "text/plain" }});
-    }
-  }
-
   else if(path === "/app") {
     return new Response(await file("./src/app.html"), { headers: { "content-type": "text/html; charset=utf-8" } });
   }
@@ -62,9 +33,28 @@ async function handler(req: Request): Promise<Response> {
   else if(path === "/index.css") {
     return new Response(await file("./src/index.css"), { headers: { "content-type": "text/css" } });
   }
+
+  else if(path === route("\/\~.*")) {
+    if(path.split("/").length > 2) {
+      return new Response("not found", { status: 404 });
+    } else {
+      const username = path.split("/")[1].replaceAll("~", "");
+      const { data } = await supabase.from('profiles').select('username');
+      const usernames: Array<string> = [];
+      data?.forEach(user => {
+        usernames.push(user.username);
+      })
+
+      if(usernames.includes(username)) {
+        return new Response(username);
+      } else {
+        return new Response('not found', { status: 404 });
+      }
+    }
+  }
   
   else {
-    return new Response("404", { headers: { "content-type": "text/plain" } });
+    return new Response("not found", { status: 404 });
   }
 }
 console.log("Listening on http://localhost:8000");

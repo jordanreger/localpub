@@ -12,6 +12,13 @@
 </nav>
 
 <h1>settings</h1>
+
+<p>change your username:</p>
+<form id="username-form">
+  <input type="text" placeholder="username" value="username..." id="username-input" minlength="2" />
+  <input type="submit" value="submit" />
+</form>
+<br/>
 <button id="logout">logout</button>
 
 <script type="module">
@@ -23,6 +30,29 @@
   if(data.session === null) {
     window.location.replace("/");
   } else {
+    const user = await supabase.auth.getUser();
+    const username = user.data.user.user_metadata.username;
+
+    const username_form = document.getElementById("username-form"), username_input = username_form.children[0];
+
+    username_input.value = username;
+
+    username_form.onsubmit = async (e) => {
+      e.preventDefault();
+      const username = e.target.children[0].value;
+
+      const { data, _error } = await supabase.auth.updateUser({
+        data: { username: username }
+      })
+      let { error } = await supabase.from('profiles').upsert({ id: user.data.user.id, username, updated_at: new Date() })
+
+      if(error) {
+        console.log(error);
+      }
+
+      //window.location.reload();
+    }
+
     document.getElementById("logout").onclick = (e) => {
       e.preventDefault();
       supabase.auth.signOut()

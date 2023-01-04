@@ -11,7 +11,7 @@
   </ul>
 </nav>
 
-<h1 id="username"></h1>
+<h1 id="username">~</h1>
 <form id="username-form" style="display: none">
   <label for="username-input">please enter a username.</label>
   <br/>
@@ -47,9 +47,11 @@
     e.preventDefault();
     const username = e.target.children[3].value;
 
-    const { data, error } = await supabase.auth.updateUser({
+    const { data, _error } = await supabase.auth.updateUser({
       data: { username: username }
     })
+
+    let { error } = await supabase.from('profiles').upsert({ id: user.data.user.id, username, updated_at: new Date() })
 
     window.location.reload();
   }

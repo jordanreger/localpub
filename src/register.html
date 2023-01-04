@@ -14,10 +14,10 @@
 
 <h1>register</h1>
 <form id="form">
-  <input type="email" id="form-email" placeholder="email" required />
+  <input type="text" id="form-username" placeholder="username" minlength="2" required />
   <br/>
   <br/>
-  <input type="password" id="form-password" placeholder="password" minlength="6" required />
+  <input type="email" id="form-email" placeholder="you@mail.xyz" required />
   <br/>
   <br/>
   <input type="submit" />
@@ -30,11 +30,10 @@
   const form = document.getElementById("form");
   form.onsubmit = async (e) => {
     e.preventDefault();
-    const email = e.target.children[0].value, password = e.target.children[3].value;
+    const username = e.target.children[0].value, email = e.target.children[3].value;
 
-    const { data, error } = await supabase.auth.signUp({
-      email: email,
-      password: password
+    const { data, error } = await supabase.auth.({
+      email: email 
     })
 
     if(!error){

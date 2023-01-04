@@ -7,20 +7,18 @@
 <nav>
   <ul>
     <li><a href="/">home</a></li>
-    <li><a href="/register">register</a></li>
     <li><a href="/login">login</a></li>
   </ul>
 </nav>
 
 <h1>login</h1>
+<p>we'll send you a link to follow to login.</p>
 <form id="form">
-  <input type="email" id="form-email" placeholder="email" required />
+  <input type="email" id="form-email" placeholder="you@mail.xyz" required />
   <br/>
+  <label for="form-email" id="form-email-label" style="display: none;"><i>an email has been sent.</i></label>
   <br/>
-  <input type="password" id="form-password" placeholder="password" minlength="6" required />
-  <br/>
-  <br/>
-  <input type="submit" />
+  <input type="submit" value="submit" />
 </form>
 
 <script type="module">
@@ -30,17 +28,15 @@
   const form = document.getElementById("form");
   form.onsubmit = async (e) => {
     e.preventDefault();
-    const email = e.target.children[0].value, password = e.target.children[3].value;
+    const email = e.target.children[0].value;
 
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signInWithOtp({
       email: email,
-      password: password
+      options: {
+        emailRedirectTo: 'http://localhost:8000/app'
+      }
     })
 
-    if(!error){
-      window.location.replace("/app");
-    } else {
-      console.log(error);
-    }
+    document.getElementById("form-email-label").style.display = "block";
   }
 </script>

@@ -38,6 +38,10 @@ input, textarea, button {
     border-radius: 0;
 }
 
+input[type="submit"], button:hover {
+    cursor: pointer;
+}
+
 .posts-table td {
     padding: 2px;
     border-bottom: 1px solid;

@@ -19,7 +19,7 @@
   <input type="submit" value="submit" />
 </form>
 <br/>
-<button id="logout">logout</button>
+<a href="" id="logout">logout</a>
 
 <script type="module">
   import { createClient } from "https://esm.sh/@supabase/supabase-js@2.2.3";
@@ -30,8 +30,7 @@
   if(data.session === null) {
     window.location.replace("/");
   } else {
-    const user = await supabase.auth.getUser();
-    const username = user.data.user.user_metadata.username;
+    const user = JSON.parse(localStorage.getItem(localStorage.key(0))).user, username = user.user_metadata.username;
 
     const username_form = document.getElementById("username-form"), username_input = username_form.children[0];
 
@@ -44,13 +43,13 @@
       const { data, _error } = await supabase.auth.updateUser({
         data: { username: username }
       })
-      let { error } = await supabase.from('profiles').upsert({ id: user.data.user.id, username, updated_at: new Date() })
+      let { error } = await supabase.from('profiles').upsert({ id: user.id, username, updated_at: new Date() })
 
       if(error) {
         console.log(error);
       }
 
-      //window.location.reload();
+      window.location.reload();
     }
 
     document.getElementById("logout").onclick = (e) => {

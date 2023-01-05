@@ -38,6 +38,10 @@ input, textarea, button {
     border-radius: 0;
 }
 
+#post-form > textarea {
+    width: 100%;
+}
+
 input[type="submit"], button:hover {
     cursor: pointer;
 }

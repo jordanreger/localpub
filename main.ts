@@ -39,14 +39,28 @@ async function handler(req: Request): Promise<Response> {
       return new Response("not found", { status: 404 });
     } else {
       const username = path.split("/")[1].replaceAll("~", "");
-      const { data } = await supabase.from('profiles').select('username');
-      const usernames: Array<string> = [];
+      const { data } = await supabase.from('profiles').select();
+
+      let user_exists = false;
+      let user_id: string;
+
       data?.forEach(user => {
-        usernames.push(user.username);
+        if(user.username === username) {
+          user_exists = true;
+          user_id = user.id;
+        }
       })
 
-      if(usernames.includes(username)) {
-        return new Response(username);
+      if(user_exists) {
+        const user_posts: Array<string> = [];
+        const { data } = await supabase.from('posts').select();
+        data?.forEach(post => {
+          if(post.user_id === user_id) {
+            user_posts.push(post);
+          }
+        })
+
+        return new Response(JSON.stringify(user_posts), { headers: { "content-type": "application/json" } });
       } else {
         return new Response('not found', { status: 404 });
       }

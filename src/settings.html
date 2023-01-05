@@ -30,7 +30,7 @@
   if(data.session === null) {
     window.location.replace("/");
   } else {
-    const user = JSON.parse(localStorage.getItem(localStorage.key(0))).user, username = user.user_metadata.username;
+    const user = data.session.user, username = user.user_metadata.username;
 
     const username_form = document.getElementById("username-form"), username_input = username_form.children[0];
 

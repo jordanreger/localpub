@@ -27,8 +27,6 @@
   
   const { data, error } = await supabase.auth.getSession();
 
-  console.log(data);
-
   if(data.session === null) {
     const form = document.getElementById("form");
     form.onsubmit = async (e) => {
@@ -38,7 +36,7 @@
       const { data, error } = await supabase.auth.signInWithOtp({
         email: email,
         options: {
-          emailRedirectTo: 'https://localpub.deno.dev/app'
+          emailRedirectTo: 'http://localpub.deno.dev/app'
         }
       })
 

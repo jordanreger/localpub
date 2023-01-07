@@ -8,7 +8,7 @@
   <ul>
     <li><a href="/app">home</a></li>
     <li><a href="/feed">feed</a></li>
-    <li><a href="" id="you">you</a></li>
+    <li><a href="" id="profile">profile</a></li>
     <li><a href="/settings">settings</a></li>
   </ul>
 </nav>
@@ -46,7 +46,7 @@
       document.getElementById("post-form").style.display = "none";
     }
 
-    document.getElementById("you").href = `/~${username}`;
+    document.getElementById("profile").href = `/~${username}`;
 
     const username_form = document.getElementById("username-form");
     username_form.onsubmit = async (e) => {

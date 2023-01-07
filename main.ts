@@ -61,11 +61,31 @@ async function handler(req: Request): Promise<Response> {
         const { data } = await supabase.from('posts').select();
         data?.forEach(post => {
           if(post.user_id === user_id) {
-            user_posts.push(post);
+            user_posts.push(`<li>&#8212; <a href="/post/${post.id}">${post.content}</a>`);
           }
         })
 
-        return new Response(JSON.stringify(user_posts), { headers: { "content-type": "application/json" } });
+        const profile = `
+          <head>
+            <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, shrink-to-fit=no" />
+            <link rel="preload" href="/index.css" as="style" />
+            <link rel="stylesheet" media="all" href="/index.css" type="text/css" />
+          </head>
+
+          <nav>
+            <ul>
+              <li><a href="/">home</a></li>
+              <li><a href="/login">login</a></li>
+            </ul>
+          </nav>
+
+          <h1>~${username}</h1>
+          <ul>
+            ${user_posts}
+          </ul>
+        `;
+
+        return new Response(profile, { headers: { "content-type": "text/html; charset=utf-8" } });
       } else {
         return new Response('not found', { status: 404 });
       }
@@ -107,6 +127,14 @@ async function handler(req: Request): Promise<Response> {
         <link rel="preload" href="/index.css" as="style" />
         <link rel="stylesheet" media="all" href="/index.css" type="text/css" />
       </head>
+
+      <nav>
+        <ul>
+          <li><a href="/">home</a></li>
+          <li><a href="/login">login</a></li>
+        </ul>
+      </nav>
+
       <h1><a href="/~${username}" style="text-decoration: none">~${username}</a></h1>
       <p>${post_content.content}</p>
       `;

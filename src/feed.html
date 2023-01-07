@@ -8,7 +8,7 @@
   <ul>
     <li><a href="/app">home</a></li>
     <li><a href="/feed">feed</a></li>
-    <li><a href="" id="you">you</a></li>
+    <li><a href="" id="profile">profile</a></li>
     <li><a href="/settings">settings</a></li>
   </ul>
 </nav>
@@ -38,7 +38,7 @@
       document.getElementById("post-form").style.display = "none";
     }
 
-    document.getElementById("you").href = `/~${username}`;
+    document.getElementById("profile").href = `/~${username}`;
 
     let posts = await supabase.from('posts').select();
     posts = posts.data;
@@ -48,7 +48,7 @@
     });
 
     posts.forEach(post => {
-      document.getElementById("posts").innerHTML += `<li><a href="">${"author"}</a> &#8212; <a href="/post/${post.id}">${post.content}</a></li>`;
+      document.getElementById("posts").innerHTML += `<li><a href="/~${username}">${"~" + username}</a> &#8212; <a href="/post/${post.id}">${post.content}</a></li>`;
     })
   }
 </script>

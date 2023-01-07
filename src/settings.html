@@ -7,6 +7,8 @@
 <nav>
   <ul>
     <li><a href="/app">home</a></li>
+    <li><a href="/feed">feed</a></li>
+    <li><a href="" id="you">you</a></li>
     <li><a href="/settings">settings</a></li>
   </ul>
 </nav>
@@ -35,6 +37,8 @@
     const username_form = document.getElementById("username-form"), username_input = username_form.children[0];
 
     username_input.value = username;
+    //document.getElementById("username").innerText = "~" + username;
+    document.getElementById("you").href = `/~${username}`;
 
     username_form.onsubmit = async (e) => {
       e.preventDefault();

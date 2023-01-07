@@ -92,30 +92,16 @@ button:hover {
     }
 }
 
-nav ul {
+ul {
     list-style: none;
     padding: 0;
 }
 
-nav ul li {
+ul li {
     display: inline-block;
     padding-right: 8px;
 }
 
-/* Classes */
-
-.field { margin-bottom: 1rem; }
-.field > label { margin-bottom: .25rem; }
-.field > * { display: block; width: 100%; box-sizing: border-box; }
-
-.editor { height: 500px; }
-.about { height: 150px; }
-.auth-form { max-width: 400px; }
-
-.posts-title {
-    padding-left: 8px;
-}
-
-.posts-date {
-    white-space: nowrap;
+.auth {
+    display: none;
 }

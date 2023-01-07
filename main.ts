@@ -1,3 +1,4 @@
+// deno-lint-ignore-file
 import { serve } from "https://deno.land/std@0.119.0/http/server.ts";
 import "https://deno.land/std@0.170.0/dotenv/load.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.2.3";
@@ -24,6 +25,10 @@ async function handler(req: Request): Promise<Response> {
 
   else if(path === "/app") {
     return new Response(await file("./src/app.html"), { headers: { "content-type": "text/html; charset=utf-8" } });
+  }
+
+  else if(path === "/feed") {
+    return new Response(await file("./src/feed.html"), { headers: { "content-type": "text/html; charset=utf-8" } });
   }
 
   else if(path === "/settings") {
@@ -61,6 +66,54 @@ async function handler(req: Request): Promise<Response> {
         })
 
         return new Response(JSON.stringify(user_posts), { headers: { "content-type": "application/json" } });
+      } else {
+        return new Response('not found', { status: 404 });
+      }
+    }
+  }
+
+  else if(path === route("/post\/.*")) {
+    if(path.split("/").length > 3) {
+      return new Response("not found", { status: 404 });
+    } else {
+      const post_id = path.split("/")[2];
+
+      const { data } = await supabase.from('posts').select();
+
+      let post_exists = false;
+      let post_content: any;
+
+      data?.forEach(post => {
+        if(String(post.id) === post_id) {
+          post_exists = true;
+          post_content = post;
+        }
+      })
+
+      let profiles = await supabase.from('profiles').select();
+      profiles = profiles.data;
+
+      let username = undefined;
+
+      profiles.forEach(user => {
+        if(user.id === post_content.user_id) {
+          username = user.username;
+        }
+      });
+
+      const post = `
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, shrink-to-fit=no" />
+        <link rel="preload" href="/index.css" as="style" />
+        <link rel="stylesheet" media="all" href="/index.css" type="text/css" />
+      </head>
+      <h1><a href="/~${username}" style="text-decoration: none">~${username}</a></h1>
+      <p>${post_content.content}</p>
+      `;
+      
+
+      if(post_exists) {
+        return new Response(post, { headers: { "content-type": "text/html; charset=utf-8" } });
       } else {
         return new Response('not found', { status: 404 });
       }

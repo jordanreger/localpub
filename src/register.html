@@ -12,9 +12,12 @@
   </ul>
 </nav>
 
-<h1>login</h1>
-<p>don't have an account? <a href="/register">register</a></p>
+<h1>register</h1>
+<p>already have an account? <a href="/login">login</a></p>
 <form id="form">
+  <input type="text" id="form-username" placeholder="username" required />
+  <br/>
+  <br/>
   <input type="email" id="form-email" placeholder="email" required />
   <br/>
   <br/>
@@ -28,18 +31,19 @@
   const form = document.getElementById("form");
   form.onsubmit = async (e) => {
     e.preventDefault();
-    const email = e.target.children[0].value, password = e.target.children[3].value;
+    const username = e.target.children[0].value, email = e.target.children[3].value, password = e.target.children[6].value;
 
-    fetch("/login-auth", {
+    fetch("/register-auth", {
       method: 'POST',
       body: JSON.stringify({
+        username: username,
         email: email,
         password: password
       })
     })
     .then(res => res.text())
     .then(res => {
-      if(res === "logged in") {
+      if(res === "registered") {
         window.location.replace("/app");
       } else {
         console.log(res);

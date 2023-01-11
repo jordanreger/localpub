@@ -7,6 +7,7 @@
 <nav>
   <ul>
     <li><a href="/">home</a></li>
+    <li><a href="/register">register</a></li>
     <li><a href="/login">login</a></li>
   </ul>
 </nav>
@@ -15,14 +16,3 @@
 <p>
   localpub is a lightweight forum built by <a href="https://2jr.co">jordan reger</a>.
 </p>
-
-<script type="module">
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.2.3";
-  const supabase_url = "https://yxdttigyfqrrkkvehxdg.supabase.co", supabase_key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl4ZHR0aWd5ZnFycmtrdmVoeGRnIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NzI2MjE3NjMsImV4cCI6MTk4ODE5Nzc2M30.czHsxEi3EItV0JNMsVtgClc3SOOFVGGQldAqh3Xtuhc", supabase = createClient(supabase_url, supabase_key);
-
-  const { data, error } = await supabase.auth.getSession();
-
-  if(data.session !== null) {
-    window.location.replace("/app");
-  }
-</script>

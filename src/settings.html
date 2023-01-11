@@ -7,61 +7,23 @@
 <nav>
   <ul>
     <li><a href="/app">home</a></li>
-    <li><a href="/feed">feed</a></li>
-    <li><a href="" id="profile">profile</a></li>
     <li><a href="/settings">settings</a></li>
   </ul>
 </nav>
 
 <h1>settings</h1>
 
-<p>change your username:</p>
-<form id="username-form">
-  <input type="text" placeholder="username" value="username..." id="username-input" minlength="2" />
-  <input type="submit" value="submit" />
-</form>
-<br/>
-<a href="" id="logout">logout</a>
+<span id="logout">logout</span>
 
 <script type="module">
-  import { createClient } from "https://esm.sh/@supabase/supabase-js@2.2.3";
-  const supabase_url = "https://yxdttigyfqrrkkvehxdg.supabase.co", supabase_key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl4ZHR0aWd5ZnFycmtrdmVoeGRnIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NzI2MjE3NjMsImV4cCI6MTk4ODE5Nzc2M30.czHsxEi3EItV0JNMsVtgClc3SOOFVGGQldAqh3Xtuhc", supabase = createClient(supabase_url, supabase_key);
-  
-  const { data, error } = await supabase.auth.getSession();
-
-  if(data.session === null) {
-    window.location.replace("/");
-  } else {
-    const user = data.session.user, username = user.user_metadata.username;
-
-    const username_form = document.getElementById("username-form"), username_input = username_form.children[0];
-
-    username_input.value = username;
-    //document.getElementById("username").innerText = "~" + username;
-    document.getElementById("profile").href = `/~${username}`;
-
-    username_form.onsubmit = async (e) => {
-      e.preventDefault();
-      const username = e.target.children[0].value;
-
-      const { data, _error } = await supabase.auth.updateUser({
-        data: { username: username }
-      })
-      let { error } = await supabase.from('profiles').upsert({ id: user.id, username, updated_at: new Date() })
-
-      if(error) {
-        console.log(error);
+  document.getElementById("logout").onclick = (e) => {
+    e.preventDefault();
+    fetch("/logout")
+    .then(res => res.text())
+    .then(res => {
+      if(res === "logout") {
+        window.location.replace("/");
       }
-
-      window.location.reload();
-    }
-
-    document.getElementById("logout").onclick = (e) => {
-      e.preventDefault();
-      supabase.auth.signOut()
-        .then(() => {
-          window.location.replace("/");
-        })
-    }
+    })
   }
 </script>

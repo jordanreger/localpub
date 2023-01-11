@@ -7,18 +7,9 @@
 <nav>
   <ul>
     <li><a href="/app">home</a></li>
-    <li><a href="/feed">feed</a></li>
-    <li><a href="" id="profile">profile</a></li>
     <li><a href="/settings">settings</a></li>
   </ul>
 </nav>
-<form id="username-form" style="display: none">
-  <label for="username-input">please enter a username.</label>
-  <br/>
-  <br/>
-  <input type="text" placeholder="username" id="username-input" minlength="2" />
-  <input type="submit" value="submit" />
-</form>
 
 <h1>home</h1>
 <form id="post-form">
@@ -29,51 +20,23 @@
 </form>
 
 <script type="module">
-  import { createClient } from "https://esm.sh/@supabase/supabase-js@2.2.3";
-  const supabase_url = "https://yxdttigyfqrrkkvehxdg.supabase.co", supabase_key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl4ZHR0aWd5ZnFycmtrdmVoeGRnIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NzI2MjE3NjMsImV4cCI6MTk4ODE5Nzc2M30.czHsxEi3EItV0JNMsVtgClc3SOOFVGGQldAqh3Xtuhc", supabase = createClient(supabase_url, supabase_key);
-  
-  const { data, error } = await supabase.auth.getSession();
+  const post_form = document.getElementById("post-form");
+  post_form.onsubmit = async (e) => {
+    e.preventDefault();
 
-  if(data.session === null) {
-    window.location.replace("/");
-  } else {
-    const user = data.session.user, username = user.user_metadata.username;
+    const post = e.target.children[0].value;
+    console.log(post);
 
-    // set username
-    if(username === "") {
-      document.getElementById("username").style.display = "none";
-      document.getElementById("username-form").style.display = "block";
-      document.getElementById("post-form").style.display = "none";
+    /*
+    const post = e.target.children[0].value;
+
+    let { error } = await supabase.from('posts').insert({ user_id: user.id, content: post, created_at: new Date() })
+
+    if(error) {
+      console.log(error);
     }
+    */
 
-    document.getElementById("profile").href = `/~${username}`;
-
-    const username_form = document.getElementById("username-form");
-    username_form.onsubmit = async (e) => {
-      e.preventDefault();
-      const username = e.target.children[3].value;
-
-      const { data, _error } = await supabase.auth.updateUser({
-        data: { username: username }
-      })
-
-      let { error } = await supabase.from('profiles').upsert({ id: user.id, username, updated_at: new Date() })
-
-      window.location.reload();
-    }
-
-    const post_form = document.getElementById("post-form");
-    post_form.onsubmit = async (e) => {
-      e.preventDefault();
-      const post = e.target.children[0].value;
-
-      let { error } = await supabase.from('posts').insert({ user_id: user.id, content: post, created_at: new Date() })
-
-      if(error) {
-        console.log(error);
-      }
-
-      window.location.reload();
-    }
+    //window.location.reload();
   }
 </script>

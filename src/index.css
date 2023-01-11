@@ -105,3 +105,12 @@ ul li {
 .auth {
     display: none;
 }
+
+#logout {
+    text-decoration: underline;
+    color: #ffe551;
+}
+
+#logout:hover {
+    cursor: pointer;
+}
